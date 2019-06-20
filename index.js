@@ -60,7 +60,6 @@ RedisSnowflakeId.prototype.next = async function (machineId = 0) {
   let segments = await this.redisClient.evalAsync(...args);
   // redis的毫秒是6位的，取前3位
   segments[1] = parseInt(segments[1] / 1000);
-  console.log('RedisSnowflakeId.next__segments', segments);
   return this.buildId(...segments);
 };
 
@@ -74,9 +73,9 @@ RedisSnowflakeId.prototype.next = async function (machineId = 0) {
  */
 RedisSnowflakeId.prototype.buildId = function (second, microSecond, machineId, count) {
   let miliSecond = second * 1000 + microSecond - this.options.epoch;
-  // 42位毫秒时间戳 + 8机器id + 14位自增序列
-  let res = lpad(miliSecond.toString(2), '0', 42) + lpad(machineId.toString(2), '0', 8) + lpad(count.toString(2), '0', 14);
-  var id_bit = new BN(res, 2);
+  // 0 + 41位毫秒时间戳 + 8机器id + 14位自增序列
+  let base = '0' + lpad(miliSecond.toString(2), '0', 41) + lpad(machineId.toString(2), '0', 8) + lpad(count.toString(2), '0', 14);
+  var id_bit = new BN(base, 2);
   return id_bit.toString();
 };
 
@@ -89,7 +88,10 @@ RedisSnowflakeId.prototype.parse = async function (id) {
   let id_bit = new BN(id, 10);
   // 回填为64位
   let base = lpad(id_bit.toString(2), '0', 64);
-  return parseInt(base.substr(0, 42), 2) + this.options.epoch;
+  let timestamp = parseInt(base.substr(1, 41), 2) + this.options.epoch;
+  let machineId = parseInt(base.substr(42, 8), 2);
+  let count = parseInt(base.substr(50, 14), 2);
+  return { timestamp, machineId, count };
 };
 
 module.exports = RedisSnowflakeId;
