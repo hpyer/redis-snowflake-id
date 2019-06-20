@@ -1,0 +1,30 @@
+{
+  "name": "redis-snowflake-id",
+  "version": "1.0.0",
+  "description": "Node.js implementation of Twitter Snowflake ID Generator, base on redis.",
+  "author": "Hpyer",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:hpyer/redis-snowflake-id.git"
+  },
+  "keywords": [
+    "snowflake",
+    "unique",
+    "flake",
+    "redis",
+    "id",
+    "idgen",
+    "generator"
+  ],
+  "dependencies": {
+    "bluebird": "^3.5.5",
+    "bn.js": "^4.11.8",
+    "merge": "^1.2.1",
+    "redis": "^2.8.0"
+  }
+}
