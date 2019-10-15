@@ -19,10 +19,8 @@ const lpad = function (str, padString, length) {
 
 // 默认选项
 const defaultOptions = {
-  // redis 配置，详见 https://www.npmjs.com/package/redis
-  redis: {
-    host: '127.0.0.1',
-  },
+  // redis 配置，默认不配置。详见 https://www.npmjs.com/package/redis
+  redis: null,
   // 世纪，用于减少生成的id数字大小，单位：毫秒，如：1300000000000
   epoch: 0,
   // redis 的hash键名
@@ -33,9 +31,6 @@ const defaultOptions = {
 let RedisSnowflakeId = function (opts) {
   this.options = Merge.recursive(defaultOptions, opts || {});
 
-  if (!this.options.redis) {
-    throw new Error('未配置redis，详见：https://www.npmjs.com/package/redis');
-  }
   this.options.epoch = parseInt(this.options.epoch || 0);
   if (this.options.epoch < 0 || this.options.epoch > Date.now()) {
     throw new Error('无效世纪毫秒数。范围：0 <= epoch < Date.now()');
@@ -44,10 +39,17 @@ let RedisSnowflakeId = function (opts) {
     throw new Error('未设置hash键名');
   }
 
-  this.redisClient = Redis.createClient(this.options.redis);
+  if (this.options.redis) {
+    try {
+      this.redisClient = Redis.createClient(this.options.redis);
+    }
+    catch (e) {
+      throw new Error('无法连接redis，请检查配置是否正确。详见：https://www.npmjs.com/package/redis');
+    }
 
-  let file = Path.resolve(__dirname + '/fetch-id.lua');
-  this.luaScript = Fs.readFileSync(file);
+    let file = Path.resolve(__dirname + '/fetch-id.lua');
+    this.luaScript = Fs.readFileSync(file);
+  }
 };
 
 /**
@@ -56,6 +58,9 @@ let RedisSnowflakeId = function (opts) {
  * @return {string}
  */
 RedisSnowflakeId.prototype.next = async function (machineId = 0) {
+  if (!this.luaScript) {
+    throw new Error('未配置redis，无法生成id');
+  }
   let args = [this.luaScript, 1, this.options.hash_key, machineId];
   let segments = await this.redisClient.evalAsync(...args);
   // redis的毫秒是6位的，取前3位
