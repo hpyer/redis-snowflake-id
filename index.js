@@ -27,6 +27,7 @@ const defaultOptions = {
   hash_key: 'REDIS_SNOWFLAKE_ID',
 };
 
+let redisClient = null;
 
 let RedisSnowflakeId = function (opts) {
   this.options = Merge.recursive(defaultOptions, opts || {});
@@ -41,7 +42,9 @@ let RedisSnowflakeId = function (opts) {
 
   if (this.options.redis) {
     try {
-      this.redisClient = Redis.createClient(this.options.redis);
+      if (!redisClient) {
+        redisClient = Redis.createClient(this.options.redis);
+      }
     }
     catch (e) {
       throw new Error('无法连接redis，请检查配置是否正确。详见：https://www.npmjs.com/package/redis');
@@ -62,7 +65,7 @@ RedisSnowflakeId.prototype.next = async function (machineId = 0) {
     throw new Error('未配置redis，无法生成id');
   }
   let args = [this.luaScript, 1, this.options.hash_key, machineId];
-  let segments = await this.redisClient.evalAsync(...args);
+  let segments = await redisClient.evalAsync(...args);
   // redis的毫秒是6位的，取前3位
   segments[1] = parseInt(segments[1] / 1000);
   return this.buildId(...segments);
