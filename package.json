@@ -24,7 +24,7 @@
   "dependencies": {
     "bluebird": "^3.5.5",
     "bn.js": "^4.11.8",
-    "merge": "^1.2.1",
+    "merge": "^2.1.1",
     "redis": "^2.8.0"
   }
 }
