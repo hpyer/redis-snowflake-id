@@ -1,7 +1,10 @@
 language: node_js
 node_js:
   - 12
-
+service:
+  - redis-server
+before_script:
+  - sudo redis-server /etc/redis/redis.conf --port 6379
 deploy:
   provider: npm
   email: "$NPM_EMAIL"
