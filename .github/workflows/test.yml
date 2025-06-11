@@ -8,12 +8,14 @@ on:
       - 'master'
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+      - uses: redis/setup-redis@v1
+      - run: redis-server --daemonize yes
       - run: npm install
       - run: npm test
