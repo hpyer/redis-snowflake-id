@@ -8,14 +8,22 @@ on:
       - 'master'
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16]
+        redis-version: [6]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Git checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
         with:
-          node-version: 16
-      - uses: redis/setup-redis@v1
-      - run: redis-server --daemonize yes
+          node-version: ${{ matrix.node-version }}
+      - name: Start Redis ${{ matrix.redis-version }}
+        uses: supercharge/redis-github-action@1.7.0
+        with:
+          redis-version: ${{ matrix.redis-version }}
       - run: npm install
       - run: npm test
