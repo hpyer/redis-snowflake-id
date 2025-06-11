@@ -1,6 +1,6 @@
 {
   "name": "redis-snowflake-id",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Node.js implementation of Twitter Snowflake ID Generator, base on redis.",
   "author": "Hpyer",
   "license": "MIT",
@@ -22,9 +22,7 @@
     "generator"
   ],
   "dependencies": {
-    "bluebird": "^3.7.2",
-    "bn.js": "^5.2.0",
-    "merge": "^2.1.1",
-    "redis": "^3.1.2"
+    "bn.js": "^5.2.2",
+    "ioredis": "^5.6.1"
   }
 }

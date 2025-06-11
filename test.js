@@ -1,36 +1,34 @@
 'use strict';
 
-const RedisSnowflakeId = require('./index');
+const RedisSnowflakeId = require('./');
 
-const run = async function () {
-  let options = {
-    // redis 配置，默认不配置。详见 https://www.npmjs.com/package/redis
+(async function() {
+  let idgen = new RedisSnowflakeId({
     redis: {
       host: '127.0.0.1',
+      port: 6379,
     },
-    // 世纪，用于减少生成的id数字大小，单位：毫秒，如：1300000000000
     epoch: 1300000000000,
-    // redis 的hash键名
-    hash_key: 'REDIS_SNOWFLAKE_ID',
-  };
-  let idgen = new RedisSnowflakeId(options);
+    hash_key: 'TEST_REDIS_SNOWFLAKE_ID',
+  });
 
-  let id = await idgen.next();
-  console.log('id', id);
+  // 使用方法
+  let id1 = await idgen.next();
+  console.log('id1', id1);
+  // 解析id信息
+  console.log('id1_info', idgen.parse(id1));
 
-  let data = await idgen.parse(id);
-  console.log('data', data);
-
+  // 自定义机器id
   let machineId = 3;
   let id2 = await idgen.next(machineId);
   console.log('id2', id2);
+  console.log('id2_info', idgen.parse(id2));
 
   // // 若不配置redis，可调用buildId方法，手工生成id
   // let second = 1570000000, microSecond = 123, machineId = 3, count = 99;
-  // let id = await idgen.buildId(second, microSecond, machineId, count);
-  // console.log('manual_id', id);
+  // let manual_id = idgen.buildId(second, microSecond, machineId, count);
+  // console.log('manual_id', manual_id);
+  // console.log('manual_id_info', idgen.parse(manual_id));
 
   process.exit()
-}
-
-run();
+})();

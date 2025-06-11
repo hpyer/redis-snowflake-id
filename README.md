@@ -4,6 +4,8 @@
 
 ### 安装
 
+> `1.2.0` 版本开始改用 `ioredis` 模块作为redis客户端
+
 ```shell
 npm install redis-snowflake-id -S
 ```
@@ -11,14 +13,15 @@ npm install redis-snowflake-id -S
 或
 
 ```shell
-yarn add redis-snowflake-id
+pnpm add redis-snowflake-id
 ```
 
 ### 使用
 
 ```js
 let options = {
-  // redis 配置，详见 https://www.npmjs.com/package/redis
+  // Redis 客户端配置，配置详见 https://www.npmjs.com/package/ioredis
+  // 如果不传，可调用buildId方法，手工生成id，详见test.js
   redis: {
     host: '127.0.0.1',
   },
@@ -36,7 +39,7 @@ let id = await idgen.next();
 console.log('id', id);
 
 // 根据id解析生成的时间戳（毫秒）
-let time = await idgen.parse(id);
+let time = idgen.parse(id);
 console.log('time', time);
 
 // 生成不同业务类型的id，可选值：0~255，默认：0
