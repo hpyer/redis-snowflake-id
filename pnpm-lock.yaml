@@ -10,7 +10,7 @@ importers:
     dependencies:
       bn.js:
         specifier: ^5.2.2
-        version: 5.2.2
+        version: 5.2.3
       ioredis:
         specifier: ^5.6.1
         version: 5.6.1
@@ -20,8 +20,8 @@ packages:
   '@ioredis/commands@1.2.0':
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
 
-  bn.js@5.2.2:
-    resolution: {integrity: sha512-v2YAxEmKaBLahNwE1mjp4WON6huMNeuDvagFZW+ASCuA/ku0bXR9hSMw0XpiqMoA3+rmnyck/tPRSFQkoC9Cuw==}
+  bn.js@5.2.3:
+    resolution: {integrity: sha512-EAcmnPkxpntVL+DS7bO1zhcZNvCkxqtkd0ZY53h06GNQ3DEkkGZ/gKgmDv6DdZQGj9BgfSPKtJJ7Dp1GPP8f7w==}
 
   cluster-key-slot@1.1.2:
     resolution: {integrity: sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==}
@@ -68,7 +68,7 @@ snapshots:
 
   '@ioredis/commands@1.2.0': {}
 
-  bn.js@5.2.2: {}
+  bn.js@5.2.3: {}
 
   cluster-key-slot@1.1.2: {}
 
